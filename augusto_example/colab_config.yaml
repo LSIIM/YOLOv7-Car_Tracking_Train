@@ -1,0 +1,9 @@
+
+path: '/content/gdrive/My Drive/YOLOv8_custom_training/YOLO-custom-dataset/data' # dataset root dir
+train: images/train  # train images (relative to 'path')
+val: images/val  # val images (relative to 'path')
+
+# Classes
+names:
+  0: cattle_standing
+  1: cattle_seated
