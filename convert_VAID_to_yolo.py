@@ -21,6 +21,7 @@ import glob
 import random
 from tqdm import tqdm
 from pprint import pprint
+import cv2
 
 # path to VAID dataset
 VAID_path = "/mnt/hd/Projects_Datasets/GlobalDrones/PRF/VAID_dataset"
@@ -93,7 +94,7 @@ os.makedirs(VAID_yolo_path + "/val/images", exist_ok=True)
 os.makedirs(VAID_yolo_path + "/val/labels", exist_ok=True)
 
 # as labels que eu vou criar tem que ser em .txt no estilo (cada uma)
-
+# classe xc yc w h
 # 2 0.46875 0.4483173076923077 0.057692307692307696 0.055288461538461536
 # 2 0.22302737343962556 0.34655865144234915 0.12603786430086927 0.10569810514656047
 # 2 0.9675480769230769 0.9543269230769231 0.06009615384615385 0.08653846153846154
@@ -193,15 +194,15 @@ def convert_to_yolo(size_lines, objects):
         # print(f"width: {width}, height: {height}, name: {name}, xmin: {xmin}, ymin: {ymin}, xmax: {xmax}, ymax: {ymax}")
         # converte para o formato yolo
         # classe x y w h
-        x = (float(xmin) + float(xmax)) / 2
-        y = (float(ymin) + float(ymax)) / 2
+        x = (float(xmin) + (float(xmax)))/ 2 
+        y = (float(ymin) +( float(ymax) ))/ 2 
         w = float(xmax) - float(xmin)
         h = float(ymax) - float(ymin)
 
         x = x / float(width)
-        y = y / float(width)
+        y = y / float(height)
         w = w / float(width)
-        h = h / float(width)
+        h = h / float(height)
 
         objects_yolo.append([int(name)-1, x, y, w, h])
     return objects_yolo
@@ -234,5 +235,70 @@ convert_list(train_list, "train")
 convert_list(val_list, "val")
 
 
+# pega uma imagem aleatoria do original e uma do yolo e compara
+img_name_to_test = random.choice(jpg_list)
+print(img_name_to_test)
+# pega a imagem original
+img_original = cv2.imread(img_name_to_test)
+img_yolo = img_original.copy()
+
+# pega as anotacoes da imagem original
+size_lines, objects = get_info_from_xml(img_name_to_test.replace("JPEGImages", "Annotations").replace(".jpg", ".xml"))
+
+# pega as anotacoes da imagem yolo
+img_yolo = cv2.imread(img_name_to_test.replace(VAID_path,VAID_yolo_path).replace("JPEGImages", "train/images"))
 
 
+
+print("original")
+for object_lines in objects:
+    name = 0
+    xmin = 0
+    ymin = 0
+    xmax = 0
+    ymax = 0
+    for line in object_lines:
+        if "<name>" in line:
+            name = int(line.replace("<name>", "").replace("</name>", ""))
+        if "<xmin>" in line:
+            xmin = int(line.replace("<xmin>", "").replace("</xmin>", ""))
+        if "<ymin>" in line:
+            ymin = int(line.replace("<ymin>", "").replace("</ymin>", ""))
+        if "<xmax>" in line:
+            xmax = int(line.replace("<xmax>", "").replace("</xmax>", ""))
+        if "<ymax>" in line:
+            ymax = int(line.replace("<ymax>", "").replace("</ymax>", ""))
+    
+    # desenha na imagem original
+    img_original = cv2.rectangle(img_original, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+    img_original = cv2.putText(img_original, str(name), (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    print(f"width: {img_original.shape[1]}, height: {img_original.shape[0]}, name: {name}, xmin: {xmin}, ymin: {ymin}, xmax: {xmax}, ymax: {ymax}")
+
+    
+
+# desenha na imagem yolo
+print("yolo")
+# pega a label do yolo
+with open(img_name_to_test.replace(VAID_path,VAID_yolo_path).replace("JPEGImages", "train/labels").replace(".jpg", ".txt")) as f:
+    for line in f:
+        name, x, y, w, h = line.split(" ")
+        x = float(x) * img_yolo.shape[1]
+        y = float(y) * img_yolo.shape[0]
+        w = float(w) * img_yolo.shape[1]
+        h = float(h) * img_yolo.shape[0]
+        print(f"xc: {x}, yc: {y}, w: {w}, h: {h}")
+        xmin = int(x - (w/2))
+        ymin = int(y - (h/2))
+        xmax = int(x + (w/2))
+        ymax = int(y + (h/2))
+        print(f"width: {img_yolo.shape[1]}, height: {img_yolo.shape[0]}, name: {name}, xmin: {xmin}, ymin: {ymin}, xmax: {xmax}, ymax: {ymax}")
+        img_yolo = cv2.rectangle(img_yolo, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+        img_yolo = cv2.putText(img_yolo, str(name), (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        
+
+
+cv2.imshow("original", img_original)
+cv2.imshow("yolo", img_yolo)
+
+# wait for key to exit
+cv2.waitKey(0)
