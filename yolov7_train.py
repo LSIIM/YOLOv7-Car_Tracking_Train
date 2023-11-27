@@ -16,16 +16,20 @@ data_yaml_path = dataset_location + "/data.yaml"
 import os
 data_yaml_path = dataset_location + "/data.yaml"
 
+
+
 # python train.py --batch 16 --epochs 55 --data '{data_yaml_path}' --weights 'yolov7.pt' --device 0
 # verifica se o cuda esta disponivel
+
+name = "train/" + dataset_location.split('/')[-1].split('.')[0]
 if torch.cuda.is_available():
     # se sim, treina com o cuda
     print("cuda is available")
-    os.system(f"python yolov7/train.py --batch-size 4 --epochs 2 --data '{data_yaml_path}' --weights 'yolov7.pt' --device 0")
+    os.system(f"python yolov7/train.py --batch-size 4 --epochs 2 --project {name} --data '{data_yaml_path}' --weights 'yolov7.pt' --device 0")
 else:
     # se nao, treina com o cpu
     print("cuda is not available")
-    os.system(f"python yolov7/train.py --batch-size 4 --epochs 2 --data '{data_yaml_path}' --weights 'yolov7.pt'")
+    os.system(f"python yolov7/train.py --batch-size 4 --epochs 2 --project {name} --data '{data_yaml_path}' --weights 'yolov7.pt'")
 
 # le o log do ultimo treino e gera os graficos e salva ma pasta do experimento
 
