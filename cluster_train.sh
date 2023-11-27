@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #
 # Script de exemplo para submeter trabalho que não use MPI
