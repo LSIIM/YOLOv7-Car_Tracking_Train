@@ -14,6 +14,6 @@
 #SBATCH --mail-type=BEGIN # Envia email quando o trabalho for iniciado
 #SBATCH --mail-type=END # Envia email quando o trabalho finalizar
 #SBATCH --mail-type=FAIL # Envia email caso o trabalho apresentar uma mensagem de erro.
-python yolov7_train "/home/antoniosobieranski/ralph/VAID_yolo"
-python yolov7_train "/home/antoniosobieranski/ralph/YOLOv7-Car_Tracking_Train/Areial1-4"
+python yolov7_train.py "/home/antoniosobieranski/ralph/VAID_yolo"
+python yolov7_train.py "/home/antoniosobieranski/ralph/YOLOv7-Car_Tracking_Train/Areial1-4"
 
