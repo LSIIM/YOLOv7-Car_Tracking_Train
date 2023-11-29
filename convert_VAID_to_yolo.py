@@ -113,7 +113,7 @@ data_yaml["names"] = [
 ]
 data_yaml["nc"] = 7
 data_yaml["train"] = VAID_yolo_path + "/train/images"
-data_yaml["valid"] = VAID_yolo_path + "/valid/images"
+data_yaml["val"] = VAID_yolo_path + "/valid/images"
 
 # cria o arquivo data.yaml
 with open(VAID_yolo_path + "/data.yaml", 'w') as outfile:
