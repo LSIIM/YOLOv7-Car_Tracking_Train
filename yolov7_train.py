@@ -25,21 +25,21 @@ name = "train/" + dataset_location.split('/')[-1].split('.')[0]
 if torch.cuda.is_available():
     # se sim, treina com o cuda
     print("cuda is available")
-    os.system(f"python yolov7/train.py --batch-size 4 --epochs 2 --project {name} --data '{data_yaml_path}' --weights 'yolov7.pt' --device 0")
+    os.system(f"python yolov7/train.py --batch-size 16 --epochs 100 --project {name} --data '{data_yaml_path}' --weights 'yolov7.pt' --device 0")
 else:
     # se nao, treina com o cpu
     print("cuda is not available")
-    os.system(f"python yolov7/train.py --batch-size 4 --epochs 2 --project {name} --data '{data_yaml_path}' --weights 'yolov7.pt'")
+    os.system(f"python yolov7/train.py --batch-size 16 --epochs 100 --project {name} --data '{data_yaml_path}' --weights 'yolov7.pt'")
 
 # le o log do ultimo treino e gera os graficos e salva ma pasta do experimento
 
 
-# pega o ultimo log
-log_list = glob.glob("runs/train/*")
-log_list.sort()
-exp_path = log_list[-1]
-# pega o nome do events.out.tfevents (lista os arquivos da pasta e pega o que começa com events)
-event_file = glob.glob(exp_path + "/events*")[0]
+# # pega o ultimo log
+# log_list = glob.glob("runs/train/*")
+# log_list.sort()
+# exp_path = log_list[-1]
+# # pega o nome do events.out.tfevents (lista os arquivos da pasta e pega o que começa com events)
+# event_file = glob.glob(exp_path + "/events*")[0]
 
 # # usa o tensorboard para ler o log
 # from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
