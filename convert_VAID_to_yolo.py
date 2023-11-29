@@ -11,7 +11,7 @@
 # - trailer
 # nc: 7
 # train: mnt/hd/Projects_Datasets/GlobalDrones/PRF/VAID_yolo/train/images
-# val: mnt/hd/Projects_Datasets/GlobalDrones/PRF/VAID_yolo/val/images
+# val: mnt/hd/Projects_Datasets/GlobalDrones/PRF/VAID_yolo/valid/images
 
 
 
@@ -90,8 +90,8 @@ VAID_yolo_path = "/mnt/hd/Projects_Datasets/GlobalDrones/PRF/VAID_yolo"
 # cria as pastas
 os.makedirs(VAID_yolo_path + "/train/images", exist_ok=True)
 os.makedirs(VAID_yolo_path + "/train/labels", exist_ok=True)
-os.makedirs(VAID_yolo_path + "/val/images", exist_ok=True)
-os.makedirs(VAID_yolo_path + "/val/labels", exist_ok=True)
+os.makedirs(VAID_yolo_path + "/valid/images", exist_ok=True)
+os.makedirs(VAID_yolo_path + "/valid/labels", exist_ok=True)
 
 # as labels que eu vou criar tem que ser em .txt no estilo (cada uma)
 # classe xc yc w h
@@ -113,7 +113,7 @@ data_yaml["names"] = [
 ]
 data_yaml["nc"] = 7
 data_yaml["train"] = VAID_yolo_path + "/train/images"
-data_yaml["val"] = VAID_yolo_path + "/val/images"
+data_yaml["val"] = VAID_yolo_path + "/valid/images"
 
 # cria o arquivo data.yaml
 with open(VAID_yolo_path + "/data.yaml", 'w') as outfile:
