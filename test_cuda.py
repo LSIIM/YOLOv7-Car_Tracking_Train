@@ -4,4 +4,4 @@ def test_cuda():
     cuda_available = torch.cuda.is_available()
     return f"CUDA Version: {cuda_version}, CUDA Available: {cuda_available}"
 
-test_cuda_result = test_cuda()
+test_cuda_result = test_cuda()          
