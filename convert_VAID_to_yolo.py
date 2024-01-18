@@ -302,3 +302,4 @@ cv2.imshow("yolo", img_yolo)
 
 # wait for key to exit
 cv2.waitKey(0)
+
